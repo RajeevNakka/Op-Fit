@@ -31,7 +31,7 @@ public class UserDao extends DaoBase {
 
     public void CreateNewUser(User user){
         RequestQueue requestQueue = Volley.newRequestQueue(context);
-        String URL = "https://192.168.0.105/Users/PostUser";
+        String URL = "http://192.168.0.105:81/Users";
         final String mRequestBody = new Gson().toJson(user);
 
         StringRequest stringRequest = new StringRequest(Request.Method.POST, URL, new Response.Listener<String>() {
