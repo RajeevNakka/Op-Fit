@@ -25,7 +25,7 @@ public class WebApiWrapper<TEntity> {
 
     WebApiWrapper(String endPoint, Context context){
         this.Context = context;
-        this.EndPoint = endPoint;
+        this.EndPoint = endPoint + "/";
     }
 
     public List<TEntity> get(){

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.hackathon.optfit.Util.NukeSSLCerts;
 import com.hackathon.optfit.dao.DaoManager;
 import com.hackathon.optfit.entities.HeartRateReading;
 import com.hackathon.optfit.entities.User;
@@ -14,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        new NukeSSLCerts().nuke();
 
         User u = new User();
         u.userName = "fsdfd";

@@ -7,3 +7,4 @@ D:\Git\Op-Fit\Server\OpFit.Entities\obj\Debug\netcoreapp3.1\OpFit.Entities.dll
 D:\Git\Op-Fit\Server\OpFit.Entities\obj\Debug\netcoreapp3.1\OpFit.Entities.pdb
 D:\Git\Op-Fit\Server\OpFit.Entities\bin\Debug\netcoreapp3.1\OpFit.Entities.runtimeconfig.json
 D:\Git\Op-Fit\Server\OpFit.Entities\bin\Debug\netcoreapp3.1\OpFit.Entities.runtimeconfig.dev.json
+D:\Git\Op-Fit\Server\OpFit.Entities\obj\Debug\netcoreapp3.1\OpFit.Entities.csprojAssemblyReference.cache
