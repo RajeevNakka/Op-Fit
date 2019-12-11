@@ -20,9 +20,9 @@ public class DaoManager {
 
     public DaoManager(Context context) {
         EndPoint = context.getString(R.string.EndPoint);
-        UsersApi = new WebApiWrapper<User>(EndPoint + "/Users", context);
-        AccelerationsApi = new WebApiWrapper<AccelerationReading>(EndPoint + "/Accelerations", context);
-        GpsApi = new WebApiWrapper<GpsReading>(EndPoint + "/GeoLocations", context);
-        HeartRateApi = new WebApiWrapper<HeartRateReading>(EndPoint + "/HeartRates", context);
+        UsersApi = new WebApiWrapper<User>(EndPoint + "/Users", context,User.class);
+        AccelerationsApi = new WebApiWrapper<AccelerationReading>(EndPoint + "/Accelerations", context,AccelerationReading.class);
+        GpsApi = new WebApiWrapper<GpsReading>(EndPoint + "/GeoLocations", context,GpsReading.class);
+        HeartRateApi = new WebApiWrapper<HeartRateReading>(EndPoint + "/HeartRates", context,HeartRateReading.class);
     }
 }

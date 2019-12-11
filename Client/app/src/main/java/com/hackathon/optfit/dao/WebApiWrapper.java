@@ -14,6 +14,9 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.hackathon.optfit.Util.ResponseListener;
+import com.hackathon.optfit.entities.User;
 
 import java.io.UnsupportedEncodingException;
 import java.util.List;
@@ -22,34 +25,69 @@ public class WebApiWrapper<TEntity> {
 
     private final String EndPoint;
     private Context Context;
+    final Class<TEntity> TypeParameterClass;
 
-    WebApiWrapper(String endPoint, Context context){
+    WebApiWrapper(String endPoint, Context context, Class<TEntity> typeParameterClass ) {
         this.Context = context;
         this.EndPoint = endPoint + "/";
+        this.TypeParameterClass = typeParameterClass;
     }
 
-    public List<TEntity> get(){
-        return  null;
+    public List<TEntity> get() {
+        return null;
     }
 
-    public TEntity get(int id){
-        return  null;
+    public TEntity get(int id) {
+        return null;
     }
 
-    public TEntity post(TEntity entity){
+    public void get(String id, final ResponseListener<TEntity> responseListener) {
+        RequestQueue queue = Volley.newRequestQueue(Context);
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, EndPoint+id,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        TEntity entity = new Gson().fromJson(response, TypeParameterClass);
+                        FireEvent(entity, responseListener);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                FireEvent(null, responseListener);
+            }
+        });
+
+        // Add the request to the RequestQueue.
+        queue.add(stringRequest);
+    }
+
+    public void post(TEntity entity) {
+        post(entity, null);
+    }
+
+    public void post(TEntity entity, final ResponseListener<TEntity> responseListener) {
         RequestQueue requestQueue = Volley.newRequestQueue(Context);
         //String URL = "http://192.168.0.105:81/Users";
         final String mRequestBody = new Gson().toJson(entity);
-
+        Log.i("LOG_VOLLEY",mRequestBody);
         StringRequest stringRequest = new StringRequest(Request.Method.POST, EndPoint, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 Log.i("LOG_VOLLEY", response);
+                try {
+                    TEntity entity =  new Gson().fromJson(response, TypeParameterClass);
+                    FireEvent(entity, responseListener);
+                } catch (Exception e) {
+                    FireEvent(null, responseListener);
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("LOG_VOLLEY", error.toString());
+                FireEvent(null, responseListener);
             }
         }) {
             @Override
@@ -72,24 +110,29 @@ public class WebApiWrapper<TEntity> {
                 String responseString = "";
                 if (response != null) {
 
-                    responseString = String.valueOf(response.statusCode);
-
+                    try {
+                        responseString = new String(response.data, "UTF-8");
+                    }catch (UnsupportedEncodingException e){}
                 }
                 return Response.success(responseString, HttpHeaderParser.parseCacheHeaders(response));
             }
         };
 
         requestQueue.add(stringRequest);
-
-        return  null;
     }
 
-    public TEntity put(TEntity entity){
-        return  null;
+    private void FireEvent(TEntity entity, ResponseListener<TEntity> responseListener) {
+        if (responseListener != null) {
+            responseListener.onComplete(entity);
+        }
     }
 
-    public TEntity delete(int id){
-        return  null;
+    public TEntity put(TEntity entity) {
+        return null;
+    }
+
+    public TEntity delete(int id) {
+        return null;
     }
 }
 

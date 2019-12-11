@@ -10,18 +10,31 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.hackathon.optfit.Util.SessionManager;
 import com.hackathon.optfit.dao.DaoManager;
 import com.hackathon.optfit.entities.GpsReading;
-import com.hackathon.optfit.entities.User;
 
 public class BackgroundLocationService extends Service {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String TAG = SignUp.class.getSimpleName();
     private DaoManager DaoManager;
     private LocationManager mLocationManager = null;
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 10f;
     private int UserId;
+
+    private static Intent currentIntent;
+    public static void start(Context context){
+        Intent intent = new Intent(context, BackgroundLocationService.class);
+        currentIntent = intent;
+        context.startService(currentIntent);
+    }
+
+    public static void stop(Context context){
+        //Intent intent = new Intent(context, BackgroundLocationService.class);
+        if(currentIntent != null)
+            context.stopService(currentIntent);
+    }
 
     private class LocationListener implements android.location.LocationListener {
         Location mLastLocation;
@@ -75,9 +88,7 @@ public class BackgroundLocationService extends Service {
         super.onStartCommand(intent, flags, startId);
 
         DaoManager = new DaoManager(BackgroundLocationService.this);
-        SharedPreferences prefs = this.getSharedPreferences(
-                "com.hackathon.optfit.backgroundaccelerometer", Context.MODE_PRIVATE);
-        UserId =  prefs.getInt("UserId",2);
+        UserId = new SessionManager(this).getUserId();
 
 
         Log.e(TAG, "onCreate");

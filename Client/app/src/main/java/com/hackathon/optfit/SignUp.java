@@ -6,17 +6,19 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.hackathon.optfit.Util.NukeSSLCerts;
+import com.hackathon.optfit.Util.ResponseListener;
+import com.hackathon.optfit.Util.SessionManager;
 import com.hackathon.optfit.dao.DaoManager;
 import com.hackathon.optfit.entities.User;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
     EditText Username,Password,ConfirmPassword,FirstName,LastName,Age;
     RadioGroup Genderr;
@@ -26,7 +28,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_signup);
 
         Username =  findViewById(R.id.username);
         Password =  findViewById(R.id.password);
@@ -71,18 +73,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         user.lastName = LastName.getText().toString();
         user.age = Integer.parseInt(Age.getText().toString());
         user.gender = Genderr.getCheckedRadioButtonId() == R.id.male ? 0 : 1;
+        user.deviceId = Settings.Secure.getString(this.getContentResolver(),Settings.Secure.ANDROID_ID);
 
-        DaoManager.UsersApi.post(user);
+        DaoManager.UsersApi.post(user, new ResponseListener<User>() {
+            @Override
+            public void onComplete(User user) {
+                new SessionManager(SignUp.this).create(user);
+                BackgroundAccelerometerService.start(SignUp.this);
+                BackgroundLocationService.start(SignUp.this);
+                openHomeActivity();
+            }
+        });
+    }
 
-
-        SharedPreferences prefs = this.getSharedPreferences(
-                "com.hackathon.optfit.backgroundaccelerometer", Context.MODE_PRIVATE);
-        prefs.edit().putInt("UserId",2).apply();
-
-        Intent intent = new Intent(this, BackgroundAccelerometerService.class);
-        startService(intent);
-
-        Intent intent2 = new Intent(this, BackgroundLocationService.class);
-        startService(intent2);
+    private void openHomeActivity() {
+        finish();
+        Intent homeIntent = new Intent(SignUp.this,Home.class);
+        startActivity(homeIntent);
     }
 }

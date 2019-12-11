@@ -1,4 +1,4 @@
 <resources>
-    <string name="app_name">OptFitApp</string>
+    <string name="app_name">Opt Fit</string>
     <string name="EndPoint">https://opfitapi.azurewebsites.net</string>
 </resources>

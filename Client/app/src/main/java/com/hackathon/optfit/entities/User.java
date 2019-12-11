@@ -12,6 +12,7 @@ public class User {
     public String lastName;
     public Integer age;
     public Integer gender;
+    public String deviceId;
     public List<AccelerationReading> accelerationReadings = null;
     public List<HeartRateReading> heartRateReadings = null;
     public List<GpsReading> gpsReadings = null;

@@ -12,11 +12,9 @@
     import android.util.Log;
     import android.widget.Toast;
 
+    import com.hackathon.optfit.Util.SessionManager;
     import com.hackathon.optfit.dao.DaoManager;
     import com.hackathon.optfit.entities.AccelerationReading;
-
-    import java.io.FileOutputStream;
-    import java.io.FileWriter;
 
     /*
         BackgroundAccelerometer
@@ -25,7 +23,7 @@
         - Runs in background, restarts itself at bootup
     */
     public class BackgroundAccelerometerService extends Service implements SensorEventListener{
-        static final String LOG_TAG = MainActivity.class.getSimpleName();
+        static final String LOG_TAG = SignUp.class.getSimpleName();
         private boolean mInitialized;
         private SensorManager mSensorManager;
         private Sensor mAccelerometer;
@@ -35,6 +33,19 @@
         private int period = 5;
         private DaoManager DaoManager;
         private int UserId;
+
+        private static Intent currentIntent;
+        public static void start(Context context){
+            Intent intent = new Intent(context, BackgroundAccelerometerService.class);
+            currentIntent = intent;
+            context.startService(currentIntent);
+        }
+
+        public static void stop(Context context){
+            //Intent intent = new Intent(context, BackgroundAccelerometerService.class);
+            if(currentIntent != null)
+                context.stopService(currentIntent);
+        }
 
         public BackgroundAccelerometerService() {
         }
@@ -47,13 +58,11 @@
             mInitialized = false;
             mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
             mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
 
             DaoManager = new DaoManager(this);
 
-            SharedPreferences prefs = this.getSharedPreferences(
-                    "com.hackathon.optfit.backgroundaccelerometer", Context.MODE_PRIVATE);
-            UserId =  prefs.getInt("UserId",2);
+            UserId = new SessionManager(this).getUserId();
             
             return START_STICKY;
         }
