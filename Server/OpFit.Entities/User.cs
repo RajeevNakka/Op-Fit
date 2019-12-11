@@ -18,6 +18,7 @@ namespace OpFit.Entities
         public string LastName { get; set; }
         public uint Age { get; set; }
         public Gender Gender { get; set; }
+        public string DeviceId { get; set; }
 
         #region Relation/Navigation
         public List<Acceleration> AccelerationReadings { get; } = new List<Acceleration>();

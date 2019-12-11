@@ -8,7 +8,8 @@ namespace OpFit.Entities.Readings
     {
         #region Base
         public int Id { get; set; }
-        public DateTime TimeStamp { get; set; } 
+        public DateTime TimeStamp { get; set; }
+        public bool IsAcknowledged { get; set; }
         #endregion
 
         #region Relation
