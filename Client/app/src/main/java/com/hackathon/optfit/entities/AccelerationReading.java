@@ -1,5 +1,7 @@
 package com.hackathon.optfit.entities;
 
+import java.util.Date;
+
 public class AccelerationReading {
 
     public Integer id;

@@ -79,8 +79,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onComplete(User user) {
                 new SessionManager(SignUp.this).create(user);
-                BackgroundAccelerometerService.start(SignUp.this);
                 BackgroundLocationService.start(SignUp.this);
+                BackgroundAccelerometerService.start(SignUp.this);
                 openHomeActivity();
             }
         });

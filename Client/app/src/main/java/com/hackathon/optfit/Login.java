@@ -46,8 +46,8 @@ public class Login extends AppCompatActivity implements View.OnClickListener {
                         Toast.makeText(Login.this, "Invalid credentials", Toast.LENGTH_LONG).show();
                     else {
                         new SessionManager(Login.this).create(user);
-                        BackgroundAccelerometerService.start(Login.this);
                         BackgroundLocationService.start(Login.this);
+                        BackgroundAccelerometerService.start(Login.this);
                         openHomeActivity();
                     }
                 }

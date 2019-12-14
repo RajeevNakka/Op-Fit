@@ -7,6 +7,31 @@
     android:padding="12dp"
     tools:context=".Home">
 
+    <EditText
+        android:id="@+id/RV_Threshold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="phone"
+        android:text="RV Threshold"
+        app:layout_constraintBottom_toTopOf="@+id/SOS_Number"
+        android:layout_marginLeft="@dimen/control_margin"
+        android:layout_marginRight="@dimen/control_margin"
+        android:layout_marginTop="@dimen/control_margin"
+        android:layout_marginBottom="30dp" />
+
+    <EditText
+        android:id="@+id/SOS_Number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="SOS Number"
+        app:layout_constraintBottom_toTopOf="@+id/switch_accelerometer"
+        android:layout_marginLeft="@dimen/control_margin"
+        android:layout_marginRight="@dimen/control_margin"
+        android:layout_marginTop="@dimen/control_margin"
+        android:layout_marginBottom="30dp" />
 
     <Switch
         android:id="@+id/switch_accelerometer"
@@ -45,5 +70,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

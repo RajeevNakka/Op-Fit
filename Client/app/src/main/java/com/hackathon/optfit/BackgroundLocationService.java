@@ -9,8 +9,10 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.webkit.GeolocationPermissions;
 
 import com.hackathon.optfit.Util.SessionManager;
+import com.hackathon.optfit.Util.Util;
 import com.hackathon.optfit.dao.DaoManager;
 import com.hackathon.optfit.entities.GpsReading;
 
@@ -22,6 +24,8 @@ public class BackgroundLocationService extends Service {
     private static final int LOCATION_INTERVAL = 1000;
     private static final float LOCATION_DISTANCE = 10f;
     private int UserId;
+
+    public static GpsReading LastLocation;
 
     private static Intent currentIntent;
     public static void start(Context context){
@@ -53,7 +57,12 @@ public class BackgroundLocationService extends Service {
             gr.userId = UserId;
             gr.longitude = location.getLongitude();
             gr.latitude = location.getLatitude();
+            gr.timeStamp = Util.getTimeStamp();
             DaoManager.GpsApi.post(gr);
+
+            synchronized(this) {
+                LastLocation = gr;
+            }
         }
 
         @Override
