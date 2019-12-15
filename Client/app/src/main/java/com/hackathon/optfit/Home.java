@@ -4,6 +4,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.Manifest;
 import android.app.ActivityManager;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,8 +17,12 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.Switch;
+import android.widget.Toast;
 
 import com.hackathon.optfit.Util.SessionManager;
+import com.hackathon.optfit.Util.Util;
+
+import java.util.Calendar;
 
 import pub.devrel.easypermissions.AfterPermissionGranted;
 import pub.devrel.easypermissions.EasyPermissions;
@@ -51,8 +58,8 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
             AccelerometerSwitch = findViewById(R.id.switch_accelerometer);
             GpsSwitch = findViewById(R.id.switch_gps);
 
-            AccelerometerSwitch.setChecked(isMyServiceRunning(BackgroundAccelerometerService.class));
-            GpsSwitch.setChecked(isMyServiceRunning(BackgroundLocationService.class));
+            AccelerometerSwitch.setChecked(Util.isMyServiceRunning(this,BackgroundAccelerometerService.class));
+            GpsSwitch.setChecked(Util.isMyServiceRunning(this,BackgroundLocationService.class));
 
             AccelerometerSwitch.setOnCheckedChangeListener(this);
             GpsSwitch.setOnCheckedChangeListener(this);
@@ -104,6 +111,13 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
                 }
             });
 
+
+            Intent intent = new Intent(this, MyService.class);
+            PendingIntent pendingIntent = PendingIntent.getService(this.getApplicationContext(), 0, intent, 0);
+
+            AlarmManager alarmManager = (AlarmManager) getSystemService(ALARM_SERVICE);
+            alarmManager.setInexactRepeating(AlarmManager.RTC, System.currentTimeMillis(), 1000, pendingIntent);
+
         } else {
             // Do not have permissions, request them now
             EasyPermissions.requestPermissions(this, getString(R.string.Permissions_Rationale),
@@ -127,15 +141,7 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
         startActivity(loginIntent);
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
-        }
-        return false;
-    }
+
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -161,4 +167,5 @@ public class Home extends AppCompatActivity implements View.OnClickListener, Com
         // Forward results to EasyPermissions
         EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this);
     }
+
 }

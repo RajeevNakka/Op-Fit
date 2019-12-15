@@ -28,15 +28,20 @@ public class BackgroundLocationService extends Service {
     public static GpsReading LastLocation;
 
     private static Intent currentIntent;
-    public static void start(Context context){
-        Intent intent = new Intent(context, BackgroundLocationService.class);
-        currentIntent = intent;
-        context.startService(currentIntent);
+
+    public static void start(Context context) {
+
+        if (Util.isMyServiceRunning(context, BackgroundLocationService.class) == false) {
+
+            Intent intent = new Intent(context, BackgroundLocationService.class);
+            currentIntent = intent;
+            context.startService(currentIntent);
+        }
     }
 
-    public static void stop(Context context){
+    public static void stop(Context context) {
         //Intent intent = new Intent(context, BackgroundLocationService.class);
-        if(currentIntent != null)
+        if (currentIntent != null)
             context.stopService(currentIntent);
     }
 
@@ -60,7 +65,7 @@ public class BackgroundLocationService extends Service {
             gr.timeStamp = Util.getTimeStamp();
             DaoManager.GpsApi.post(gr);
 
-            synchronized(this) {
+            synchronized (this) {
                 LastLocation = gr;
             }
         }

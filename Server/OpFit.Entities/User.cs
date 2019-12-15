@@ -19,6 +19,8 @@ namespace OpFit.Entities
         public uint Age { get; set; }
         public Gender Gender { get; set; }
         public string DeviceId { get; set; }
+        public bool? IsWearingHelmet { get; set; }
+        public bool? IsAcknowledged { get; set; }
 
         #region Relation/Navigation
         public List<Acceleration> AccelerationReadings { get; } = new List<Acceleration>();

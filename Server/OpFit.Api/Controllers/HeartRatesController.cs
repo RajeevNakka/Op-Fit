@@ -42,6 +42,24 @@ namespace OpFit.Api.Controllers
             return heartRate;
         }
 
+        [HttpGet("ByUser/{userId}")]
+        public async Task<ActionResult<IEnumerable<HeartRate>>> GetHeartRatesByUser(int userId)
+        {
+            return await _context.HeartRateReadings.Where(hr => hr.UserId == userId).ToListAsync();
+        }
+
+        [HttpGet("ByUser/{userId}/Limit/{limit}/Offset/{offsetId?}")]
+        public async Task<ActionResult<IEnumerable<HeartRate>>> GetTopHeartRatesByUser(int userId, int limit, int? offsetId = null)
+        {
+            var result = _context.HeartRateReadings.Where(a => a.UserId == userId);
+            if (offsetId == null)
+                result = result.OrderByDescending(a => a.Id).Take(limit).OrderBy(a => a.Id);
+            else
+                result = result.Where(a => a.Id > offsetId).Take(limit);
+
+            return await result.ToListAsync();
+        }
+
         // PUT: api/HeartRates/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.

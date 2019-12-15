@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="12dp"
-    tools:context=".Home">
+    android:layout_margin="10dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical">
 
     <EditText
         android:id="@+id/RV_Threshold"
@@ -14,11 +19,10 @@
         android:ems="10"
         android:inputType="phone"
         android:text="RV Threshold"
-        app:layout_constraintBottom_toTopOf="@+id/SOS_Number"
         android:layout_marginLeft="@dimen/control_margin"
         android:layout_marginRight="@dimen/control_margin"
         android:layout_marginTop="@dimen/control_margin"
-        android:layout_marginBottom="30dp" />
+        android:layout_marginBottom="30dp"/>
 
     <EditText
         android:id="@+id/SOS_Number"
@@ -27,7 +31,6 @@
         android:ems="10"
         android:inputType="number"
         android:text="SOS Number"
-        app:layout_constraintBottom_toTopOf="@+id/switch_accelerometer"
         android:layout_marginLeft="@dimen/control_margin"
         android:layout_marginRight="@dimen/control_margin"
         android:layout_marginTop="@dimen/control_margin"
@@ -36,15 +39,14 @@
     <Switch
         android:id="@+id/switch_accelerometer"
         style="@style/TextAppearance.AppCompat.Large"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+
         android:layout_marginLeft="@dimen/control_margin"
         android:layout_marginRight="@dimen/control_margin"
         android:layout_marginTop="@dimen/control_margin"
         android:layout_marginBottom="30dp"
-        android:text="Accelerometer Service"
-        app:layout_constraintBottom_toTopOf="@+id/switch_gps"
-        tools:layout_editor_absoluteX="12dp" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Accelerometer Service" />" />
 
     <Switch
         android:id="@+id/switch_gps"
@@ -56,20 +58,17 @@
         android:layout_marginRight="@dimen/control_margin"
         android:layout_marginTop="@dimen/control_margin"
         android:layout_marginBottom="30dp"
-        android:text="Gps Service"
-        app:layout_constraintBottom_toTopOf="@+id/button_logout"
-        tools:layout_editor_absoluteX="12dp" />
 
+        android:text="Gps Service"/>
 
 
     <Button
         android:id="@+id/button_logout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Logout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        android:text="Logout" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+
+</ScrollView>

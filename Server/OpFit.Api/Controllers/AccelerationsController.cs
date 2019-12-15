@@ -28,6 +28,26 @@ namespace OpFit.Api.Controllers
             return await _context.AccelerationReadings.ToListAsync();
         }
 
+        // GET: api/Accelerations
+        [HttpGet("ByUser/{userId}")]
+        public async Task<ActionResult<IEnumerable<Acceleration>>> GetAccelerationsByUser(int userId)
+        {
+            return await _context.AccelerationReadings.Where(a=>a.UserId == userId).ToListAsync();
+        }
+
+        // GET: api/Accelerations
+        [HttpGet("ByUser/{userId}/Limit/{limit}/Offset/{offsetId?}")]
+        public async Task<ActionResult<IEnumerable<Acceleration>>> GetTopAccelerationsByUser(int userId, int limit,int? offsetId = null)
+        {
+            var result = _context.AccelerationReadings.Where(a => a.UserId == userId);
+            if (offsetId == null)
+                result = result.OrderByDescending(a=>a.Id).Take(limit).OrderBy(a=>a.Id);
+            else
+                result = result.Where(a => a.Id > offsetId).Take(limit);
+
+            return await result.ToListAsync();
+        }
+
         // GET: api/Accelerations/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Acceleration>> GetAcceleration(int id)
@@ -41,6 +61,7 @@ namespace OpFit.Api.Controllers
 
             return acceleration;
         }
+
 
         // PUT: api/Accelerations/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for

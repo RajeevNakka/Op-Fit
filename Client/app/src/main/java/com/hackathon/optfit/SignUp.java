@@ -20,7 +20,7 @@ import com.hackathon.optfit.entities.User;
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
-    EditText Username,Password,ConfirmPassword,FirstName,LastName,Age;
+    EditText Username,Password,FirstName,LastName,Age;
     RadioGroup Genderr;
     Button CreateButton;
     private DaoManager DaoManager;
@@ -32,7 +32,6 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener {
 
         Username =  findViewById(R.id.username);
         Password =  findViewById(R.id.password);
-        ConfirmPassword =  findViewById(R.id.confirm_password);
         FirstName =  findViewById(R.id.first_name);
         LastName =  findViewById(R.id.last_name);
         Age =  findViewById(R.id.age);

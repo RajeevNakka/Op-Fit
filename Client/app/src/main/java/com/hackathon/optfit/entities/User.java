@@ -13,6 +13,8 @@ public class User {
     public Integer age;
     public Integer gender;
     public String deviceId;
+    public boolean isAcknowledged;
+    public boolean isWearingHelmet;
     public List<AccelerationReading> accelerationReadings = null;
     public List<HeartRateReading> heartRateReadings = null;
     public List<GpsReading> gpsReadings = null;

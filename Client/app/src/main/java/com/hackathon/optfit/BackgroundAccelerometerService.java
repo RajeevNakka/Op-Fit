@@ -11,12 +11,17 @@ import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.hackathon.optfit.Util.ResponseListener;
 import com.hackathon.optfit.Util.SessionManager;
 import com.hackathon.optfit.Util.TelephoneUtil;
 import com.hackathon.optfit.Util.Util;
 import com.hackathon.optfit.dao.DaoManager;
 import com.hackathon.optfit.entities.AccelerationReading;
 import com.hackathon.optfit.entities.GpsReading;
+import com.hackathon.optfit.entities.HeartRateReading;
+import com.hackathon.optfit.entities.User;
+
+import java.util.List;
 
 /*
     BackgroundAccelerometer
@@ -44,9 +49,13 @@ public class BackgroundAccelerometerService extends Service implements SensorEve
     private String SosNumber;
 
     public static void start(Context context) {
-        Intent intent = new Intent(context, BackgroundAccelerometerService.class);
-        currentIntent = intent;
-        context.startService(currentIntent);
+
+        if (Util.isMyServiceRunning(context, BackgroundAccelerometerService.class) == false) {
+
+            Intent intent = new Intent(context, BackgroundAccelerometerService.class);
+            currentIntent = intent;
+            context.startService(currentIntent);
+        }
     }
 
     public static void stop(Context context) {
@@ -127,6 +136,13 @@ public class BackgroundAccelerometerService extends Service implements SensorEve
 
             ar.timeStamp = Util.getTimeStamp();
             DaoManager.AccelerationsApi.post(ar);
+
+            HeartRateReading hrr = new HeartRateReading();
+            hrr.timeStamp = Util.getTimeStamp();
+            hrr.rate = (int) (75 + (Math.random() * 100) % 10);
+            hrr.userId = UserId;
+
+
             Log.e(LOG_TAG, "writing to file " + accelLine);
 
             synchronized (this) {
@@ -134,15 +150,35 @@ public class BackgroundAccelerometerService extends Service implements SensorEve
             }
             loadSettings();
             if (resultant > RvThreshold) {
+                hrr.rate += 15;
+
                 StringBuilder message = new StringBuilder();
                 message.append("Help Needed\r\n");
                 GpsReading lastLocation = BackgroundLocationService.LastLocation;
-                message.append("Last Known Location :http://maps.google.com/?q=" + lastLocation.latitude + "," + lastLocation.longitude+"\r\n");
-                message.append("("+lastLocation.timeStamp+")");
+                message.append("Last Known Location :http://maps.google.com/?q=" + lastLocation.latitude + "," + lastLocation.longitude + "\r\n");
+                message.append("(" + lastLocation.timeStamp + ")");
 
                 TelephoneUtil.sendSms(SosNumber, message.toString());
                 new TelephoneUtil(this).makeACall(SosNumber, true);
             }
+            DaoManager.HeartRateApi.post(hrr);
+
+            DaoManager.UsersApi.getUnSafeUsers(new ResponseListener<List<User>>() {
+                @Override
+                public void onComplete(List<User> users) {
+
+                    try {
+                        if(users != null){
+                        for (User user : users) {
+                            if (user.isWearingHelmet == false) {
+                                TelephoneUtil.sendSms(SosNumber, "User " + user.firstName + ", " + user.lastName + " is not wearing helmet");
+                            }
+                        }}
+                    } catch (Exception e) {
+                        Log.e(LOG_TAG,e.getMessage());
+                    }
+                }
+            }, "UnSafe");
 
         } catch (Exception e) {
             e.printStackTrace();

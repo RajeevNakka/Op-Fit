@@ -24,9 +24,24 @@ namespace OpFit.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<User>>> GetUsers()
         {
-            var v = _context.Database.CanConnect();
-            _context.Database.EnsureCreated();
             return await _context.Users.ToListAsync();
+        }
+
+        // GET: api/Users
+        [HttpGet("UnSafe")]
+        public async Task<ActionResult<IEnumerable<User>>> GetUnSafeUsers()
+        {
+            var result = await _context.Users.Where(u => u.IsAcknowledged != true && u.IsWearingHelmet == false).ToListAsync();
+
+            foreach (var user in result)
+            {
+                user.IsAcknowledged = true;
+                _context.Entry(user).State = EntityState.Modified;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return result;
         }
 
         // GET: api/Users/5

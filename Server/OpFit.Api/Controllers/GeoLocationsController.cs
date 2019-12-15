@@ -42,6 +42,25 @@ namespace OpFit.Api.Controllers
             return geoLocation;
         }
 
+        // GET: api/Accelerations
+        [HttpGet("ByUser/{userId}")]
+        public async Task<ActionResult<IEnumerable<GeoLocation>>> GetLocationsByUser(int userId)
+        {
+            return await _context.GpsReadings.Where(g => g.UserId == userId).ToListAsync();
+        }
+
+        [HttpGet("ByUser/{userId}/Limit/{limit}/Offset/{offsetId?}")]
+        public async Task<ActionResult<IEnumerable<GeoLocation>>> GetTopHeartRatesByUser(int userId, int limit, int? offsetId = null)
+        {
+            var result = _context.GpsReadings.Where(a => a.UserId == userId);
+            if (offsetId == null)
+                result = result.OrderByDescending(a => a.Id).Take(limit).OrderBy(a => a.Id);
+            else
+                result = result.Where(a => a.Id > offsetId).Take(limit);
+
+            return await result.ToListAsync();
+        }
+
         // PUT: api/GeoLocations/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for
         // more details see https://aka.ms/RazorPagesCRUD.
